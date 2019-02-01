@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.example.timerdemo.utils.Utils;
 
@@ -13,13 +14,18 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import static com.example.timerdemo.MainActivity.TAG;
 import static com.example.timerdemo.utils.Constants.CHANNEL_ID;
+import static com.example.timerdemo.utils.Constants.COMPLETEDBROADCAST;
 import static com.example.timerdemo.utils.Constants.TIMERBROADCAST;
 
 public class TimerService extends Service {
 
     private CountDownTimer countDownTimer;
     LocalBroadcastManager localBroadcastManager;
+
+    private String timerBroadcastType;
+    private String completedBroadcastType;
 
     @Override
     public void onCreate() {
@@ -29,16 +35,20 @@ public class TimerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        long mTimeLeftInMillis = 60_000;//default timer is 1 min
+        int mTimeLeftInMins = intent.getExtras().getInt("timeInMins",0);
+        timerBroadcastType = intent.getExtras().getString("timerBroadcastType");
+        completedBroadcastType = intent.getExtras().getString("completedBroadcastType");
+        Log.d(TAG, "onStartCommand: "+timerBroadcastType);
 
+        long mTimeLeftInMillis = mTimeLeftInMins * 1_000;//1 min is 60k milliseconds
 
         if(countDownTimer == null){
             countDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     String timeLeft = Utils.convertMilisToTimeFormat(millisUntilFinished);
-                    localBroadcastManager.sendBroadcast(new Intent(TIMERBROADCAST)
-                                                        .putExtra("timeLeft", timeLeft));
+                    localBroadcastManager.sendBroadcast(new Intent(timerBroadcastType)
+                            .putExtra("timeLeft", timeLeft));
 
                 }
 
@@ -46,7 +56,11 @@ public class TimerService extends Service {
                 public void onFinish() {
                     if(countDownTimer != null){
                         countDownTimer.cancel();
+                        //send broadcast here to main that fragment_timer completed successfully
+                        localBroadcastManager.sendBroadcast(new Intent(completedBroadcastType)
+                                .putExtra("duration", mTimeLeftInMillis));
                     }
+                    stopSelf();
                 }
             }.start();
         }
@@ -72,5 +86,14 @@ public class TimerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: TIMERSERVICE "+timerBroadcastType);
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
+        super.onDestroy();
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/title_textView_fragment_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="adc"
+        />
+
+    <TextView
+        android:id="@+id/timer_textView_fragment_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="123"
+        android:textSize="55sp"
+        />
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/seekbar_fragment_timer"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+    <ToggleButton
+        android:id="@+id/startStop_toggleButton_timer"
+        android:layout_width="142dp"
+        android:layout_height="156dp"
+        android:background="@drawable/startstopbutton"
+        android:checked="true" />
+</LinearLayout>
