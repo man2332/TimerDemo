@@ -15,7 +15,7 @@ public class first extends Activity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                Intent main = new Intent(getApplicationContext(), TimerActivity.class);
                 startActivity(main);
                 finish();
             }

@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import static com.example.timerdemo.MainActivity.TAG;
+import static com.example.timerdemo.TimerActivity.TAG;
 import static com.example.timerdemo.utils.Constants.CHANNEL_ID;
 import static com.example.timerdemo.utils.Constants.COMPLETEDBROADCAST;
 import static com.example.timerdemo.utils.Constants.TIMERBROADCAST;
@@ -65,7 +65,7 @@ public class TimerService extends Service {
             }.start();
         }
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, TimerActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0,notificationIntent,0);
 
