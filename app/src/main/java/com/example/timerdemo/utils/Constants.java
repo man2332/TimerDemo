@@ -16,4 +16,16 @@ public class Constants {
 
     public static final int TIMEMAX = 24;//120 mins
     public static final int TIMEMIN = 1;
+
+    public static final String ADDEDIT_EXTRA_TOPIC_NAME = "com.example.timerdemo.EXTRA_TOPIC_NAME";
+    public static final String ADDEDIT_EXTRA_TOPIC_TOTAL_MIN = "com.example.timerdemo.EXTRA_TOPIC_TOTAL_MIN";
+    public static final String ADDEDIT_EXTRA_TOPIC_GOAL = "com.example.timerdemo.EXTRA_TOPIC_GOAL";
+    public static final String ADDEDIT_EXTRA_TOPIC_ID = "com.example.timerdemo.EXTRA_TOPIC_ID";
+    //TODO: there should also be DAYS_OF_WEEK as well or something like that
+
+    public static final String DELETE_EXTRA_TOPIC = "com.example.timerdemo.EXTRA_DELETE";
+
+    //determines if the TopicListAddEditFragment should be add or edit fragment
+    public static final int ADD_TOPIC_REQUEST = 1;
+    public static final int EDIT_TOPIC_REQUEST = 2;
 }

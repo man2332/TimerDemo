@@ -2,10 +2,13 @@ package com.example.timerdemo;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+
+import static com.example.timerdemo.TimerActivity.TAG;
 
 public class TopicRepository {
     private TopicDao topicDao;
@@ -49,6 +52,7 @@ public class TopicRepository {
 
         @Override
         protected Void doInBackground(Topic... topics) {
+            Log.d(TAG, "doInBackground: TopicRepo: "+topics[0]);
             topicDao.update(topics[0]);
             return null;
         }
