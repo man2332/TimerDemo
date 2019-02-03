@@ -107,7 +107,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        //*********************set the broadcast type for this fragment object
+        //*********************get the broadcast type for this fragment object
         timerBroadcastType =  getArguments().getString("timerBroadcastType");
         completedBroadcastType = getArguments().getString("completedBroadcastType");
 

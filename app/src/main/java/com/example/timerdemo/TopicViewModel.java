@@ -7,10 +7,12 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class TopicViewModel extends AndroidViewModel {
     private TopicRepository topicRepository;
     private LiveData<List<Topic>> allTopics;
+    //private MutableLiveData<Integer> dailyTime;
 
     public TopicViewModel(@NonNull Application application) {
         super(application);
@@ -20,6 +22,13 @@ public class TopicViewModel extends AndroidViewModel {
     public LiveData<List<Topic>> getAllTopics(){
         return allTopics;
     }
+//    public MutableLiveData<Integer> getDailyTime(){
+//        if(dailyTime == null){
+//            dailyTime = new MutableLiveData<Integer>();
+//        }
+//        return dailyTime;
+//    }
+
 
     public void insert(Topic topic){
         topicRepository.insert(topic);

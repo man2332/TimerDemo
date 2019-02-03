@@ -45,8 +45,8 @@ public abstract class TopicDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
             //populate db with fake data when user installs app
             topicDao.insert((new Topic("Math","210","210")));
-            topicDao.insert((new Topic("Math","30","210")));
-            topicDao.insert((new Topic("Math","150","210")));
+            topicDao.insert((new Topic("Java","30","210")));
+            topicDao.insert((new Topic("English","150","210")));
             return null;
         }
     }

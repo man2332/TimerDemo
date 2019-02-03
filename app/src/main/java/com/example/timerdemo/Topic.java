@@ -4,6 +4,7 @@ import java.util.Date;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "topic_table")
@@ -17,6 +18,7 @@ public class Topic {
     String totalMin;
     @ColumnInfo(name = "goal_min")
     String goalMin;
+
 
     //two variables below combine together for providing a history of successful goals completed
     //TODO: add a completion(check mark) to dates that user completed the goal time successfully

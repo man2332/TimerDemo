@@ -15,6 +15,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
+        setAlarm();
+    }
+
+    private void setAlarm() {
     }
 
     private void createNotificationChannel() {

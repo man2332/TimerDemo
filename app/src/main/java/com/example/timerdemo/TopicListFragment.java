@@ -56,6 +56,7 @@ public class TopicListFragment extends Fragment {
             public void onChanged(List<Topic> topics) {
                 topicAdapter.setTopics(topics);//here is where the adapter gets it's data
             }
+
         });
 
         Bundle bundle = getArguments();

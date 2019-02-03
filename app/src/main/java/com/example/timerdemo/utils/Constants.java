@@ -14,6 +14,8 @@ public class Constants {
     public static final String SHORTCOMPLETEDBROADCAST = "com.example.completed.short";
     public static final String LONGCOMPLETEDBROADCAST = "com.example.completed.long";
 
+    public static final String DAILYBROADCAST = "com.example.broadcast.daily";
+
     public static final int TIMEMAX = 24;//120 mins
     public static final int TIMEMIN = 1;
 
@@ -28,4 +30,6 @@ public class Constants {
     //determines if the TopicListAddEditFragment should be add or edit fragment
     public static final int ADD_TOPIC_REQUEST = 1;
     public static final int EDIT_TOPIC_REQUEST = 2;
+
+    public static final String SHAREDPREFS_DAILY_TIME = "com.example.timerdemo.DAILY_TIME";
 }
