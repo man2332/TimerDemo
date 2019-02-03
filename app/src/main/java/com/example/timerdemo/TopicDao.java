@@ -23,4 +23,8 @@ public interface TopicDao {
     void deleteAllTopics();
     @Query("SELECT * FROM topic_table")
     LiveData<List<Topic>> getAllTopics();
+
+    @Query("SELECT * FROM topic_table WHERE id LIKE :search")
+    Topic getTopicById(String search);
+
 }

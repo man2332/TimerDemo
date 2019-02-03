@@ -33,6 +33,9 @@ public class TopicViewModel extends AndroidViewModel {
     public void deleteAll(){
         topicRepository.deleteAllTopics();
     }
+    public Topic getTopicById(int id){ return topicRepository.getTopicById(id);}
+
+
 }
 //the system calls this ctor, we never instantiate a ViewModel object, the system takes care of that
 //we just call ViewModelProviders. The system keeps track if there is a viewmodel obj already created

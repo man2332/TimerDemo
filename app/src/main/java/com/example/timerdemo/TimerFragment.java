@@ -15,9 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,6 +50,8 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
     //for testing
     String titleStr;
+
+
 
     public static final TimerFragment newInstance(String title, String timerBroadcastType,
                                                   String completedBroadcastType)
@@ -106,6 +113,16 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+
+
+
     }
 
     @Override
@@ -174,6 +191,11 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
                 //TODO: add duration to the total_time_completed in the db but for now just show toast
                 Log.d(TAG, "onReceive: duration: "+titleStr + duration);
+                long timeInSeconds = duration / 1000;
+                //TODO:it stores timeInSeconds but it should be timeInMins- fix later
+                if(timeInSeconds>=5){//min store time is 5 mins
+                    ((TimerActivity)getActivity()).updateTime(timeInSeconds);
+                }
             }
         };
         Log.d(TAG, "registerLocalBroadcastReceivers: "+titleStr+" : "+timerBroadcastType);
@@ -188,4 +210,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(completedSuccessfullyReceiver);
 
     }
+
+
 }

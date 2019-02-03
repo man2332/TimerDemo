@@ -57,6 +57,9 @@ public class Topic {
     public String getTotalMin() {
         return totalMin;
     }
+    public void setTotalMin(String totalMin){
+        this.totalMin = totalMin;
+    }
 }
 
 //TABLE_TOPIC

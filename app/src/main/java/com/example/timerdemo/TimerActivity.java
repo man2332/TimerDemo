@@ -1,5 +1,6 @@
 package com.example.timerdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -7,6 +8,8 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.ButterKnife;
 
@@ -36,6 +39,12 @@ public class TimerActivity extends AppCompatActivity {
     //private int current;
 
     TimerPagerAdapter timerPagerAdapter;
+
+
+    TopicViewModel topicViewModel;
+    private int id;
+    private String topicName;
+    private String goal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +98,25 @@ public class TimerActivity extends AppCompatActivity {
 //
 //            }
 //        });
+        Intent intent = getIntent();
 
+        setTitle(intent.getStringExtra("title"));
+        id = intent.getIntExtra("id", -1);
         //************************FRAGMENT VIEW PAGER***********************************************
         List<Fragment> fragmentList = getFragments();
         timerPagerAdapter = new TimerPagerAdapter(getSupportFragmentManager(), fragmentList);
         ViewPager viewPager = findViewById(R.id.view_pager_main);
         viewPager.setAdapter(timerPagerAdapter);
+
+        topicViewModel = ViewModelProviders.of(this).get(TopicViewModel.class);
+        topicViewModel.getAllTopics().observe(this, new Observer<List<Topic>>() {
+            @Override
+            public void onChanged(List<Topic> topics) {
+
+            }
+        });
     }
+
 
     private List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();
@@ -106,7 +127,18 @@ public class TimerActivity extends AppCompatActivity {
 
         return fragments;
     }
+    public void updateTime(long timeInMins){
 
+
+//        Topic topic = topicViewModel.getAllTopics().getValue().get(id-1);
+        Topic topic = topicViewModel.getTopicById(id);
+        long topicOriginalTime = Integer.parseInt(topic.getTotalMin());
+        String sumTime = String.valueOf(topicOriginalTime += timeInMins);
+
+        topic.setTotalMin(sumTime);
+
+        topicViewModel.update(topic);
+    }
 
 //    @OnClick(R.id.startStop_toggleButton_main)
 //    public void onViewClicked() {

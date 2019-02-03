@@ -18,8 +18,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Manage your liSt!"
+            android:text="Studied Today: 00Hr:20m"
             android:textSize="30sp"
+            />
+        <TextView
+            android:id="@+id/date_textView_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/studied_today_textView_list"
+            android:layout_centerHorizontal="true"
+            android:text="Studied Today: 00Hr:20m"
+            android:textSize="20sp"
             />
     </RelativeLayout>
 

@@ -88,5 +88,37 @@ public class TopicRepository {
             return null;
         }
     }
+    //*****************************GETTING A TOPIC USING DAO****************************************
+    public Topic getTopicById(int id){
+        try {
+            GetTopicByIdAsyncTask task = new GetTopicByIdAsyncTask(topicDao);
+            task.execute(id);
+            return task.get();
+        }catch (Exception e){
+            Log.d(TAG, "getTopicById: ERROR ERROR CRASH");
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public class GetTopicByIdAsyncTask extends AsyncTask<Integer, Void, Topic>{
+
+        private TopicDao topicDao;
+        GetTopicByIdAsyncTask(TopicDao topicDao){
+            this.topicDao = topicDao;
+        }
+
+        @Override
+        protected void onPostExecute(Topic topic) {
+            super.onPostExecute(topic);
+        }
+
+        @Override
+        protected Topic doInBackground(Integer... id) {
+            return topicDao.getTopicById(id[0].toString());//it returns a list, but only the first element matters
+        }
+    }
+    public void setValue(Topic topic){
+
+    }
 
 }

@@ -13,6 +13,7 @@ import java.util.List;
 public class TopicListActivity extends AppCompatActivity {
     private TopicViewModel topicViewModel;
 
+    TopicListTimersFragment topicListTimersFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +33,16 @@ public class TopicListActivity extends AppCompatActivity {
 //                topicAdapter.setTopics(topics);
 //            }
 //        });
+        //start TopicList
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
+//                new TopicListFragment()).commit();
+
+        //start TopicListTimers
+        topicListTimersFragment = new TopicListTimersFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
-                new TopicListFragment()).commit();
+                topicListTimersFragment).commit();
+    }
+    TopicListTimersFragment getFragment(){
+        return topicListTimersFragment;
     }
 }

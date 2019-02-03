@@ -21,7 +21,8 @@
         <service android:name=".TimerService" />
 
         <activity android:name=".first" />
-        <activity android:name=".TimerActivity">
+        <activity android:name=".TimerActivity"
+            android:exported="true">
 
         </activity>
     </application>
