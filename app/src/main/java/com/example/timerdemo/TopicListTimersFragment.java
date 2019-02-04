@@ -59,6 +59,7 @@ public class TopicListTimersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated: TopicListTimersFragment.java-registerReceiver DAILYBROADCAST");
 
         IntentFilter filter = new IntentFilter(DAILYBROADCAST);
         getActivity().registerReceiver(refreshScreenReceiver,filter);
@@ -136,8 +137,8 @@ public class TopicListTimersFragment extends Fragment {
     public void setAlarm() {
         Log.d(TAG, "setAlarm: SETING STARRT");
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        calendar.set(Calendar.MINUTE, 39);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
@@ -166,7 +167,7 @@ public class TopicListTimersFragment extends Fragment {
             SharedPreferences prefs = getActivity().getSharedPreferences(SHAREDPREFS_DAILY_TIME, Context.MODE_PRIVATE);
             int time = prefs.getInt("dailyTime",1);
             dailyTimeTextView.setText(""+time);
-            
+
         }
     };
 

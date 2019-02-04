@@ -18,7 +18,8 @@ public class DailyReceiver extends BroadcastReceiver {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("dailyTime", 0);
         editor.commit();
-        Log.d(TAG, "onReceive: DAILYRECIEVER : ");
+        Log.d(TAG, "onReceive: DailyReceiver.java - setting sharedprefs - dailyTime to 0");
+        Log.d(TAG, "onReceive: DailyReceiver.java - sending Custom broadcast - DAILYBROADCAST");
         Toast.makeText(context, "RECEIVED !!!", Toast.LENGTH_LONG).show();
 
         //send a receiver to the TopicListTimersFragment to refresh

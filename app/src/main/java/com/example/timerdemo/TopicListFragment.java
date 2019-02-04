@@ -58,7 +58,7 @@ public class TopicListFragment extends Fragment {
             }
 
         });
-
+        //TODO:MOVE this delete and click functionality into TopicListTimersFragment
         Bundle bundle = getArguments();
         int id = bundle != null ? bundle.getInt(DELETE_EXTRA_TOPIC, -1) : -1;
         if(bundle != null || id != -1){
@@ -89,7 +89,7 @@ public class TopicListFragment extends Fragment {
             }
         }).attachToRecyclerView(recyclerView);
 
-        //**implement onclick listener
+        //**implement onclick listener - when a user clicks on an item - send them to the TopicListAddEditFragment
         topicAdapter.setOnTopicItemClickListener(new TopicAdapter.OnTopicItemClickListener() {
             @Override
             public void onTopicItemClick(Topic topic) {

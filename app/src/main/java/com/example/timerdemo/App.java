@@ -4,9 +4,11 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.Objects;
 
+import static com.example.timerdemo.TimerActivity.TAG;
 import static com.example.timerdemo.utils.Constants.CHANNEL_ID;
 
 public class App extends Application {
@@ -14,6 +16,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate: App.java");
         createNotificationChannel();
         setAlarm();
     }
