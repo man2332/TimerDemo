@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class TimerService extends Service {
         Log.d(TAG, "onStartCommand: "+timerBroadcastType);
 
         long mTimeLeftInMillis = mTimeLeftInMins * 1_000;//1 min is 60k milliseconds
+//        long mTimeLeftInMillis = mTimeLeftInMins * 43_200_000;//each second is 12 hours
 
         if(countDownTimer == null){
             countDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
@@ -57,8 +59,8 @@ public class TimerService extends Service {
                     if(countDownTimer != null){
                         countDownTimer.cancel();
                         //send broadcast here to main that fragment_timer completed successfully
-                        localBroadcastManager.sendBroadcast(new Intent(completedBroadcastType)
-                                .putExtra("duration", mTimeLeftInMillis));
+                        localBroadcastManager.sendBroadcast(new Intent(completedBroadcastType)//.putExtra("duration", 2880));
+                                .putExtra("duration", mTimeLeftInMillis));//each second will be 12 hours hehe
                     }
                     stopSelf();
                 }
@@ -77,6 +79,7 @@ public class TimerService extends Service {
                 .build();
 
         startForeground(1,notification);
+
 
 
         return START_NOT_STICKY;

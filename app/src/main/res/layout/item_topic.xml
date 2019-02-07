@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    app:cardCornerRadius="4dp"
+    android:foreground="?selectableItemBackground"
+    android:clickable="true"
+    >
 
-    <TextView
-        android:id="@+id/topicName_textView_item"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="30dp"
-        />
+        android:layout_margin="4dp"
+        >
+        <TextView
+            android:id="@+id/topicName_textView_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="30dp"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="10dp"/>
 
-    <TextView
-        android:id="@+id/time_textView_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="30dp"
-        />
-        <RelativeLayout
+        <TextView
+            android:id="@+id/time_textView_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"
+            android:textSize="30dp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/play_imageView_item"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
-            <TextView
-                android:id="@+id/percentageDone_TextView_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"
-                />
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/completion_imageView_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_check"
-                android:layout_toRightOf="@+id/percentageDone_TextView_item"
-                android:layout_alignBottom="@+id/percentageDone_TextView_item"
+            android:src="@drawable/ic_check"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:background="@android:color/holo_orange_light"/>
 
-                />
-        </RelativeLayout>
+    </RelativeLayout>
 
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

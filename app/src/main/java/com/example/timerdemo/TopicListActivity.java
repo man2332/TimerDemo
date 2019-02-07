@@ -39,9 +39,22 @@ public class TopicListActivity extends AppCompatActivity {
 
         //start TopicListTimers
         topicListTimersFragment = new TopicListTimersFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_topic_list_container,
                 topicListTimersFragment).commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if(count == 0) {
+            super.onBackPressed();
+        }else{
+            getSupportFragmentManager().popBackStack();
+        }
+
+    }
+
     TopicListTimersFragment getFragment(){
         return topicListTimersFragment;
     }

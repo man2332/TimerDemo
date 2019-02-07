@@ -16,8 +16,8 @@ public class Topic {
     String topicName;
     @ColumnInfo(name = "total_min")
     String totalMin;
-    @ColumnInfo(name = "goal_min")
-    String goalMin;
+//    @ColumnInfo(name = "goal_min")
+//    String goalMin;
 
 
     //two variables below combine together for providing a history of successful goals completed
@@ -26,10 +26,10 @@ public class Topic {
 //    Boolean didComplete;
 
 
-    public Topic(String topicName, String totalMin, String goalMin) {
+    public Topic(String topicName, String totalMin) {
         this.topicName = topicName;
         this.totalMin = totalMin;
-        this.goalMin = goalMin;
+//        this.goalMin = goalMin;
     }
 
     public int getId() {
@@ -48,13 +48,13 @@ public class Topic {
         this.topicName = topicName;
     }
 
-    public String getGoalMin() {
-        return goalMin;
-    }
+//    public String getGoalMin() {
+//        return goalMin;
+//    }
 
-    public void setGoalMin(String goalHours) {
-        this.goalMin = goalHours;
-    }
+//    public void setGoalMin(String goalHours) {
+//        this.goalMin = goalHours;
+//    }
 
     public String getTotalMin() {
         return totalMin;

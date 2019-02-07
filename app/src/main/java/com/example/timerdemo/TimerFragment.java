@@ -79,16 +79,17 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
 
         startStopToggleButtonTimer.setOnClickListener(this);
-
+        //seekBar position starts at 0
         current = 4;//4*5 = 20
-        seekBar.setProgress(current - TIMEMIN);//start at 20 mins
+        seekBar.setProgress(current - TIMEMIN);//start the seekBar[3] position which is 20 mins
         title.setText(getArguments().getString("title"));
         //for testing
         titleStr = title.getText().toString();
         Log.d(TAG, "onCreateView: "+titleStr);
 
-        seekBar.setMax(TIMEMAX - TIMEMIN);
-        timerTextView.setText(""+current*5);
+        seekBar.setMax(TIMEMAX - TIMEMIN);//set max to 23, which means it has 24 positions since we count 0
+        current *= 5;//now current is no longer position in our seekBar but the value lolz
+        timerTextView.setText(""+current);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -116,14 +117,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-
-
-
-    }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) { super.onViewCreated(view, savedInstanceState); }
 
     @Override
     public void onClick(View v) {
@@ -194,7 +188,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 long timeInSeconds = duration / 1000;
                 //TODO:it stores timeInSeconds but it should be timeInMins- fix later
                 if(timeInSeconds>=5){//min store time is 5 mins
-                    ((TimerActivity)getActivity()).updateTime(timeInSeconds);
+                    ((TimerActivity)getActivity()).updateTime(60);//testing
                 }
             }
         };

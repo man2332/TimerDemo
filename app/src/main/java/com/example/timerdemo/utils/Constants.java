@@ -27,9 +27,11 @@ public class Constants {
 
     public static final String DELETE_EXTRA_TOPIC = "com.example.timerdemo.EXTRA_DELETE";
 
-    //determines if the TopicListAddEditFragment should be add or edit fragment
+    //determines if the TopicListAddEditDeleteFragment should be add or edit fragment
     public static final int ADD_TOPIC_REQUEST = 1;
     public static final int EDIT_TOPIC_REQUEST = 2;
 
     public static final String SHAREDPREFS_DAILY_TIME = "com.example.timerdemo.DAILY_TIME";
+
+    public static final String STUDIEDTODAYTEXT = "Studied Today: ";
 }

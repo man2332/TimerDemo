@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,53 +58,7 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
-        //******************************************************************************************
-        //**********************************RECIEVER DEFINTIONS*************************************
-//        timerReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                if (intent.getExtras() != null) {
-//                    currentTime = intent.getExtras().getString("timeLeft");
-//                    timerTextViewMain.setText("" + currentTime);
-//                }
-//            }
-//        };
-//
-//        completedSuccessfullyReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                Long duration = intent.getExtras().getLong("duration");
-//                //reset fragment_timer text
-//                timerTextViewMain.setText("" + current * 5);
-//                seekBar.setVisibility(View.VISIBLE);
-//
-//                //TODO: add duration to the total_time_completed in the db but for now just show toast
-//                Log.d(TAG, "onReceive: duration: " + duration);
-//            }
-//        };
-        //************************SEEKBAR TIMER*****************************************************
-//        seekBar.setMax(TIMEMAX - TIMEMIN);
-//        current = 4;//4*5 = 20
-//        seekBar.setProgress(current - TIMEMIN);//start at 20 mins
-//        timerTextViewMain.setText("" + current * 5);
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                current = progress + TIMEMIN;
-//                current *= 5;
-//                timerTextViewMain.setText("" + current);
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
+
         Intent intent = getIntent();
 
         setTitle(intent.getStringExtra("title"));
@@ -120,8 +75,22 @@ public class TimerActivity extends AppCompatActivity {
         dailyTime = sharedPreferences.getInt("dailyTime",0);
         Log.d(TAG, "onCreate: TimerActivity: dailyTime: "+dailyTime);
 
+        //-to display the x icon top left corner
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+
+
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home://user clicks x icon- top left- to close timer activity
+                finish();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();

@@ -7,8 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.timerdemo.utils.ItemTouchHelperAdapter;
+import com.example.timerdemo.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.example.timerdemo.TimerActivity.TAG;
 
-public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder> {
+public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder> implements ItemTouchHelperAdapter {
     private List<Topic> topics = new ArrayList<>();
     private OnTopicItemClickListener listener;
 
@@ -34,9 +39,11 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
     public void onBindViewHolder(@NonNull TopicAdapter.TopicHolder holder, int position) {
         Topic topic = topics.get(position);
         holder.topicName.setText(topic.getTopicName());
-        holder.time.setText(topic.getTotalMin());//TODO: format this later
-        holder.percentage.setText("1%");//TODO: get the daily time- then daily time / goal time
-        holder.completionSign.setImageResource(R.drawable.ic_cancel);
+//        holder.time.setText(topic.getTotalMin());//TODO: format this later
+        holder.time.setText(Utils.convertMinToTimeFormat(topic.getTotalMin()));
+        //holder.percentage.setText("1%");//TODO: get the daily time- then daily time / goal time
+        holder.playImage.setImageResource(R.drawable.ic_play_arrow);
+
 
     }
 
@@ -45,29 +52,57 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
         return topics.size();
     }
 
+    //ItemToucherHelper implementation - when user drags and drops items
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Log.d(TAG, "onItemMove: TOPICADAPTER.java: SWITCHING");
+        if(fromPosition < toPosition){
+            for (int i = fromPosition; i < toPosition; i++){
+                Collections.swap(topics, i, i+ 1);
+            }
+        }else{
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(topics, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition,toPosition);
+        return true;
+    }
+
 
     public class TopicHolder extends RecyclerView.ViewHolder{
         TextView topicName;
         TextView time;
-        TextView percentage;
-        ImageView completionSign;
+        //TextView percentage;
+        ImageView playImage;
 
         public TopicHolder(@NonNull View itemView) {
             super(itemView);
 
             topicName = itemView.findViewById(R.id.topicName_textView_item);
             time = itemView.findViewById(R.id.time_textView_item);
-            percentage = itemView.findViewById(R.id.percentageDone_TextView_item);
-            completionSign = itemView.findViewById(R.id.completion_imageView_item);
+            //percentage = itemView.findViewById(R.id.percentageDone_TextView_item);
+            playImage = itemView.findViewById(R.id.play_imageView_item);
 
             itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(listener != null && position != RecyclerView.NO_POSITION){
+                        listener.onTopicItemClick(topics.get(position));
+                    }
+                }
+            });
+
+            playImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();//get the position of the item that was clicked
                     if(listener != null && position != RecyclerView.NO_POSITION){
                         //listener can be null if it's not implemented/assigned, NO_POSITION is a constant for -1
-                        listener.onTopicItemClick(topics.get(position));
+                        listener.onPlayItemClick(topics.get(position));
                     }
+
                 }
             });
         }
@@ -87,6 +122,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
 
     public interface OnTopicItemClickListener{
         void onTopicItemClick(Topic topic);
+        void onPlayItemClick(Topic topic);
         //-u can pass whatever u want to this method, play it it anyway u want
         //-u can pass position, etc
     }

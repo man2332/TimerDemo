@@ -35,41 +35,20 @@ import static com.example.timerdemo.utils.Constants.DELETE_EXTRA_TOPIC;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopicListAddEditFragment extends Fragment {
+public class TopicListAddEditDeleteFragment extends Fragment {
 
     private TopicViewModel topicViewModel;
 
     //    @BindView(R.id.topic_name_editText_add)
     EditText topicNameEditTextAddEdit;
-    //    @BindView(R.id.topic_goal_editText_add)
-    EditText topicGoalEditTextAddEdit;
-    //    @BindView(R.id.number_picker_hour_topic_list_add)
-    NumberPicker numberPickerHour;
 
     @BindView(R.id.delete_button_topic_list_add)
     Button deleteButtonTopicListAdd;
-    @BindView(R.id.create_button_topic_list_add)
-    Button createButtonTopicListAdd;
-
-    @BindView(R.id.mon_checkbox)
-    CheckBox monCheckbox;
-    @BindView(R.id.tue_checkbox)
-    CheckBox tueCheckbox;
-    @BindView(R.id.wed_checkbox)
-    CheckBox wedCheckbox;
-    @BindView(R.id.thu_checkbox)
-    CheckBox thuCheckbox;
-    @BindView(R.id.fri_checkbox)
-    CheckBox friCheckbox;
-    @BindView(R.id.sat_checkbox)
-    CheckBox satCheckbox;
-    @BindView(R.id.sun_checkbox)
-    CheckBox sunCheckbox;
 
     Bundle bundle;
     private int id;
 
-    public TopicListAddEditFragment() {
+    public TopicListAddEditDeleteFragment() {
         // Required empty public constructor
     }
 
@@ -78,7 +57,7 @@ public class TopicListAddEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_topic_list_add, container, false);
+        View view = inflater.inflate(R.layout.fragment_topic_list_addeditdelete, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -88,26 +67,24 @@ public class TopicListAddEditFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         topicNameEditTextAddEdit = getActivity().findViewById(R.id.topic_name_editText_add);
-        topicGoalEditTextAddEdit = getActivity().findViewById(R.id.topic_goal_editText_add);
-        numberPickerHour = getActivity().findViewById(R.id.number_picker_hour_topic_list_add);
-        numberPickerHour.setMaxValue(24);
-        numberPickerHour.setMinValue(0);
+
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
-
-        topicViewModel = ViewModelProviders.of(getActivity()).get(TopicViewModel.class);
         setHasOptionsMenu(true);
 
+        topicViewModel = ViewModelProviders.of(getActivity()).get(TopicViewModel.class);
+
+        //attempt to getArguments() from bundle, if there are, it's a edit fragment, else its a add new topic
         bundle = getArguments();
         id = bundle != null? bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID, -1) : -1;
         if (bundle != null && id != -1) {//if there is an ID
             topicNameEditTextAddEdit.setText(bundle.getString(ADDEDIT_EXTRA_TOPIC_NAME));
-            topicGoalEditTextAddEdit.setText(bundle.getString(ADDEDIT_EXTRA_TOPIC_GOAL));
             getActivity().setTitle("Edit topic: TOTAL: " + bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
         } else {
             getActivity().setTitle("Add topic");
+            deleteButtonTopicListAdd.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -125,6 +102,10 @@ public class TopicListAddEditFragment extends Fragment {
             case R.id.save_topic:
                 saveTopic();
                 return true;
+            case android.R.id.home:
+                //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
+                        new TopicListTimersFragment()).commit();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -132,30 +113,27 @@ public class TopicListAddEditFragment extends Fragment {
 
     private void saveTopic() {
         String name = topicNameEditTextAddEdit.getText().toString();
-        String goal = topicGoalEditTextAddEdit.getText().toString();
-        if (name.trim().isEmpty() || goal.trim().isEmpty()) {
+        if (name.trim().isEmpty()) {
             Log.d(TAG, "saveTopic: TopicListAddFrag IS EMPTY");
             Toast.makeText(getActivity().getApplicationContext(), "Please insert a title: " + name, Toast.LENGTH_LONG).show();
             return;
         }
-
+        //check if user is editing a topic or adding a new one
         if (bundle != null && bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID, -1) != -1) {
-            Toast.makeText(getActivity().getApplication(), "EDITTEED I THINK", Toast.LENGTH_LONG).show();
-            Topic topic = new Topic(name,
-                    bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN),
-                    goal);
+            Toast.makeText(getActivity().getApplication(), "EDITTEED I THINK ", Toast.LENGTH_LONG).show();
+            Topic topic = new Topic(name,bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
             topic.setId(bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID));
             Log.d(TAG, "saveTopic: EDIT " + bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID));
             topicViewModel.update(topic);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
-                    new TopicListFragment()).commit();
+                    new TopicListTimersFragment()).commit();
 
         } else {
             Toast.makeText(getActivity().getApplication(), "ADDED I THINK", Toast.LENGTH_LONG).show();
-            Topic topic = new Topic(name, "0", goal);
+            Topic topic = new Topic(name,"0");
             topicViewModel.insert(topic);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
-                    new TopicListFragment()).commit();
+                    new TopicListTimersFragment()).commit();
         }
 
 
@@ -170,7 +148,7 @@ public class TopicListAddEditFragment extends Fragment {
                 Log.d(TAG, "onViewClicked: DELETE");
                 Bundle deleteBundle = new Bundle();
                 deleteBundle.putInt(DELETE_EXTRA_TOPIC, id);
-                Fragment fragment = new TopicListFragment();
+                Fragment fragment = new TopicListTimersFragment();
                 fragment.setArguments(deleteBundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
                         fragment).commit();
