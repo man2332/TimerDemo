@@ -26,6 +26,7 @@ public class Constants {
     //TODO: there should also be DAYS_OF_WEEK as well or something like that
 
     public static final String DELETE_EXTRA_TOPIC = "com.example.timerdemo.EXTRA_DELETE";
+    public static final String ADDEDIT_EXTRA_TOPIC_INDEX_POSITION = "com.example.timerdemo.EXTRA_INDEX_POSITION";
 
     //determines if the TopicListAddEditDeleteFragment should be add or edit fragment
     public static final int ADD_TOPIC_REQUEST = 1;

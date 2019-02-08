@@ -188,7 +188,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 long timeInSeconds = duration / 1000;
                 //TODO:it stores timeInSeconds but it should be timeInMins- fix later
                 if(timeInSeconds>=5){//min store time is 5 mins
-                    ((TimerActivity)getActivity()).updateTime(60);//testing
+                    ((TimerActivity)getActivity()).updateTime(timeInSeconds);//testing*****************************************************************************
                 }
             }
         };

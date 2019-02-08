@@ -10,9 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.timerdemo.TimerActivity.TAG;
-import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_GOAL;
+import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_INDEX_POSITION;
 import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_ID;
 import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_NAME;
 import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_TOTAL_MIN;
@@ -47,6 +45,7 @@ public class TopicListAddEditDeleteFragment extends Fragment {
 
     Bundle bundle;
     private int id;
+    private int elementPosition;
 
     public TopicListAddEditDeleteFragment() {
         // Required empty public constructor
@@ -80,8 +79,9 @@ public class TopicListAddEditDeleteFragment extends Fragment {
         bundle = getArguments();
         id = bundle != null? bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID, -1) : -1;
         if (bundle != null && id != -1) {//if there is an ID
+            elementPosition = bundle.getInt(ADDEDIT_EXTRA_TOPIC_INDEX_POSITION);//
             topicNameEditTextAddEdit.setText(bundle.getString(ADDEDIT_EXTRA_TOPIC_NAME));
-            getActivity().setTitle("Edit topic: TOTAL: " + bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
+            getActivity().setTitle("Edit topic: ID: "+elementPosition+" TOTAL: " + bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
         } else {
             getActivity().setTitle("Add topic");
             deleteButtonTopicListAdd.setVisibility(View.INVISIBLE);
@@ -148,6 +148,7 @@ public class TopicListAddEditDeleteFragment extends Fragment {
                 Log.d(TAG, "onViewClicked: DELETE");
                 Bundle deleteBundle = new Bundle();
                 deleteBundle.putInt(DELETE_EXTRA_TOPIC, id);
+                deleteBundle.putInt(ADDEDIT_EXTRA_TOPIC_INDEX_POSITION, elementPosition);
                 Fragment fragment = new TopicListTimersFragment();
                 fragment.setArguments(deleteBundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,

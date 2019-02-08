@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     app:cardCornerRadius="4dp"
     android:foreground="?selectableItemBackground"
@@ -28,19 +27,16 @@
             android:id="@+id/time_textView_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_weight="1"
-            android:textSize="30dp"
-            android:layout_toStartOf="@+id/play_imageView_item"
-            android:layout_toLeftOf="@+id/play_imageView_item"
-            android:layout_marginRight="10dp"
-            />
+            android:textSize="30dp" />
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/play_imageView_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:padding="10dp"
             android:background="@android:color/holo_orange_light"/>

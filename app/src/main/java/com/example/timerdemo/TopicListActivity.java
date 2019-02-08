@@ -1,6 +1,7 @@
 package com.example.timerdemo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +14,9 @@ import java.util.List;
 public class TopicListActivity extends AppCompatActivity {
     private TopicViewModel topicViewModel;
 
-    TopicListTimersFragment topicListTimersFragment;
+    private Fragment topicListTimersFrag;
+
+//    TopicListTimersFragment topicListTimersFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +41,19 @@ public class TopicListActivity extends AppCompatActivity {
 //                new TopicListFragment()).commit();
 
         //start TopicListTimers
-        topicListTimersFragment = new TopicListTimersFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_topic_list_container,
-                topicListTimersFragment).commit();
+//        topicListTimersFragment = new TopicListTimersFragment();
+        if(savedInstanceState != null){
+            topicListTimersFrag = getSupportFragmentManager().getFragment(savedInstanceState, "topicListFrag");
+        }else{
+            topicListTimersFrag = new TopicListTimersFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_topic_list_container,
+                    topicListTimersFrag).commit();
+        }
+
+
+
+
+
     }
 
     @Override
@@ -55,7 +68,15 @@ public class TopicListActivity extends AppCompatActivity {
 
     }
 
-    TopicListTimersFragment getFragment(){
-        return topicListTimersFragment;
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(topicListTimersFrag != null){
+            getSupportFragmentManager().putFragment(outState, "topicListFrag", topicListTimersFrag);
+        }
     }
+
+//    TopicListTimersFragment getFragment(){
+//        return topicListTimersFragment;
+//    }
 }

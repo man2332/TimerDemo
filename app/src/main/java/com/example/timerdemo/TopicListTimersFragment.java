@@ -15,12 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.timerdemo.utils.ItemTouchHelperAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG;
-import static androidx.recyclerview.widget.ItemTouchHelper.DOWN;
-import static androidx.recyclerview.widget.ItemTouchHelper.UP;
 import static com.example.timerdemo.TimerActivity.TAG;
+import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_INDEX_POSITION;
 import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_ID;
 import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_NAME;
 import static com.example.timerdemo.utils.Constants.ADDEDIT_EXTRA_TOPIC_TOTAL_MIN;
@@ -51,7 +48,7 @@ import static com.example.timerdemo.utils.Constants.STUDIEDTODAYTEXT;
 public class TopicListTimersFragment extends Fragment {
     private TopicViewModel topicViewModel;
 
-
+    private Fragment topicListTimersFragment;
 
 
     @BindView(R.id.studied_today_textView_list)
@@ -70,6 +67,8 @@ public class TopicListTimersFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topic_list_timers, container, false);
         ButterKnife.bind(this, view);
+
+
         return view;
     }
 
@@ -104,7 +103,7 @@ public class TopicListTimersFragment extends Fragment {
         RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getView().getContext()));
 
-        topicAdapter = new TopicAdapter();
+        topicAdapter = new TopicAdapter(getActivity().getApplicationContext());
         recyclerView.setAdapter(topicAdapter);
         //DRAGING AND DROPING ITEMS
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(customItemTouchHelper());
@@ -124,10 +123,11 @@ public class TopicListTimersFragment extends Fragment {
         //when user clicks on play button or clicks on the item view itself to edit it
         TopicAdapter.OnTopicItemClickListener listener = new TopicAdapter.OnTopicItemClickListener() {
             @Override
-            public void onTopicItemClick(Topic topic) {
+            public void onTopicItemClick(Topic topic, int position) {
                 Log.d(TAG, "onTopicItemClick: TopicListTimersFragment.java: ON ITEM CLICKED");
                 Bundle bundle = new Bundle();
                 bundle.putInt(ADDEDIT_EXTRA_TOPIC_ID, topic.getId());
+                bundle.putInt(ADDEDIT_EXTRA_TOPIC_INDEX_POSITION, position);
                 bundle.putString(ADDEDIT_EXTRA_TOPIC_NAME,topic.getTopicName());
                 bundle.putString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN,topic.getTotalMin());
 //                bundle.putString(ADDEDIT_EXTRA_TOPIC_GOAL, topic.getGoalMin());
@@ -156,8 +156,11 @@ public class TopicListTimersFragment extends Fragment {
         Bundle bundle = getArguments();
         int id = bundle != null ? bundle.getInt(DELETE_EXTRA_TOPIC, -1) : -1;
         if(bundle != null || id != -1){
-            Log.d(TAG, "onViewCreated: TOPICLIST DELETED!!!");
-            Topic deleteThisTopic = topicViewModel.getAllTopics().getValue().get(id -1);
+            int indexPosition = bundle.getInt(ADDEDIT_EXTRA_TOPIC_INDEX_POSITION);
+            Log.d(TAG, "onViewCreated: TOPICLIST DELETED at POSITION: "+indexPosition);
+//            Topic deleteThisTopic = topicAdapter.getTopicAtPosition(indexPosition);
+//            Topic deleteThisTopic = topicViewModel.getAllTopics().getValue().get(id -1);
+            Topic deleteThisTopic = topicViewModel.getAllTopics().getValue().get(indexPosition-1);//get() - get the topic using index value
             topicViewModel.delete(deleteThisTopic);
         }
         //-format and set up the date text
@@ -217,7 +220,11 @@ public class TopicListTimersFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+    }
 
     public void setAlarm() {
         Log.d(TAG, "setAlarm: SETING STARRT");

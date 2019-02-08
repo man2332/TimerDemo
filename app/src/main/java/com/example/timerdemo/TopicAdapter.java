@@ -1,5 +1,6 @@
 package com.example.timerdemo;
 
+import android.content.Context;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,11 @@ import static com.example.timerdemo.TimerActivity.TAG;
 public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder> implements ItemTouchHelperAdapter {
     private List<Topic> topics = new ArrayList<>();
     private OnTopicItemClickListener listener;
+    private Context context;
+
+    public TopicAdapter(Context context) {
+        this.context = context;
+    }
 
     //TODO: set up clickable ViewHolders - user can click a view to go to a timer
     @NonNull
@@ -40,7 +46,8 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
         Topic topic = topics.get(position);
         holder.topicName.setText(topic.getTopicName());
 //        holder.time.setText(topic.getTotalMin());//TODO: format this later
-        holder.time.setText(Utils.convertMinToTimeFormat(topic.getTotalMin()));
+        int screenSize = Utils.screenSize(context);
+        holder.time.setText(Utils.convertMinToTimeFormat(topic.getTotalMin(), screenSize));
         //holder.percentage.setText("1%");//TODO: get the daily time- then daily time / goal time
         holder.playImage.setImageResource(R.drawable.ic_play_arrow);
 
@@ -89,7 +96,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if(listener != null && position != RecyclerView.NO_POSITION){
-                        listener.onTopicItemClick(topics.get(position));
+                        listener.onTopicItemClick(topics.get(position), position);//return the topic, and the index position of that topic
                     }
                 }
             });
@@ -121,7 +128,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
 
 
     public interface OnTopicItemClickListener{
-        void onTopicItemClick(Topic topic);
+        void onTopicItemClick(Topic topic, int position);
         void onPlayItemClick(Topic topic);
         //-u can pass whatever u want to this method, play it it anyway u want
         //-u can pass position, etc
