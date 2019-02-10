@@ -11,9 +11,10 @@
     >
 
     <RelativeLayout
+        android:background="@android:color/holo_green_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:padding="4dp"
         >
         <TextView
             android:id="@+id/topicName_textView_item"
@@ -39,11 +40,12 @@
             android:id="@+id/play_imageView_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_check"
+            android:src="@drawable/ic_play_arrow"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:padding="10dp"
-            android:background="@android:color/holo_orange_light"/>
+            android:background="@color/colorAccent"/>
 
     </RelativeLayout>
 

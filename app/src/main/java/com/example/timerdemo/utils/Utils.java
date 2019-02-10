@@ -52,14 +52,17 @@ public class Utils {
                         TimeUnit.MINUTES.toHours(min) - (TimeUnit.MINUTES.toDays(min) * 24),
                         TimeUnit.MINUTES.toMinutes(min) - (TimeUnit.MINUTES.toHours(min) * 60));
             } else if (min >= 60) {
+                long minsFormat = TimeUnit.MINUTES.toMinutes(min) - (TimeUnit.MINUTES.toHours(min) * 60);
+
                 String formatHour = TimeUnit.MINUTES.toHours(min) == 1? "%2dHr:" : TimeUnit.MINUTES.toHours(min) >= 10? "%02dHrs:" : "%2dHrs:";
-                String formatMin = TimeUnit.MINUTES.toMinutes(min) >= 10 ? "%02dMin" : "%2dMin";
+                String formatMin = minsFormat >= 10 ? "%02dM" : "%2dM";
                 String formatTime = formatHour + formatMin;
                 timeString = String.format(Locale.getDefault(), formatTime,
                         TimeUnit.MINUTES.toHours(min),
                         TimeUnit.MINUTES.toMinutes(min) - (TimeUnit.MINUTES.toHours(min) * 60));
             } else {
-                timeString = String.format(Locale.getDefault(), "%02d Minutes",
+                String formatMin = TimeUnit.MINUTES.toMinutes(min) >= 10 ? "%02dMin": "%2dM";
+                timeString = String.format(Locale.getDefault(), formatMin,
                         TimeUnit.MINUTES.toMinutes(min));
             }
             return timeString;
@@ -80,14 +83,17 @@ public class Utils {
                         TimeUnit.MINUTES.toHours(min) - (TimeUnit.MINUTES.toDays(min) * 24),
                         TimeUnit.MINUTES.toMinutes(min) - (TimeUnit.MINUTES.toHours(min) * 60));
             } else if (min >= 60) {
+                long minsFormat = TimeUnit.MINUTES.toMinutes(min) - (TimeUnit.MINUTES.toHours(min) * 60);
+
                 String formatHour = TimeUnit.MINUTES.toHours(min) == 1? "%2dH" : TimeUnit.MINUTES.toHours(min) >= 10? "%02dH" : "%2dH";
-                String formatMin = TimeUnit.MINUTES.toMinutes(min) >= 10 ? "%02dM" : "%2dM";
+                String formatMin = minsFormat >= 10 ? "%02dM" : "%2dM";
                 String formatTime = formatHour + formatMin;
                 timeString = String.format(Locale.getDefault(), formatTime,
                         TimeUnit.MINUTES.toHours(min),
                         TimeUnit.MINUTES.toMinutes(min) - (TimeUnit.MINUTES.toHours(min) * 60));
             } else {
-                timeString = String.format(Locale.getDefault(), "%02dMin",
+                String formatMin = TimeUnit.MINUTES.toMinutes(min) >= 10 ? "%02dMin": "%2dMin";
+                timeString = String.format(Locale.getDefault(), formatMin,
                         TimeUnit.MINUTES.toMinutes(min));
             }
             return timeString;

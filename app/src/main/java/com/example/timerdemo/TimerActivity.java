@@ -1,8 +1,11 @@
 package com.example.timerdemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +52,7 @@ public class TimerActivity extends AppCompatActivity {
     TimerPagerAdapter timerPagerAdapter;
 
 
+
     TopicViewModel topicViewModel;
     private int id;
     private String topicName;
@@ -61,6 +65,8 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
+
+
 
         Intent intent = getIntent();
 
@@ -102,6 +108,8 @@ public class TimerActivity extends AppCompatActivity {
 
 
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

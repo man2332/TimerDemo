@@ -29,7 +29,7 @@ public class App extends Application {
     private void setAlarm() {
         Log.d(TAG, "setAlarm: SETING STARRT");
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -44,7 +44,7 @@ public class App extends Application {
         int ALARM1_ID = 10000;
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 ALARM1_ID,intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
 
@@ -55,7 +55,7 @@ public class App extends Application {
             NotificationChannel notificationChannel = new NotificationChannel(
                     CHANNEL_ID,
                     getResources().getString(R.string.app_name),
-                    NotificationManager.IMPORTANCE_LOW);
+                    NotificationManager.IMPORTANCE_DEFAULT);
 
             NotificationManager notificationManager = Objects.requireNonNull(
                     getSystemService(NotificationManager.class));

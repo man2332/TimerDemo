@@ -1,12 +1,15 @@
 package com.example.timerdemo;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.example.timerdemo.utils.Utils;
@@ -29,20 +32,51 @@ public class TimerService extends Service {
     private String timerBroadcastType;
     private String completedBroadcastType;
 
+    PowerManager.WakeLock wakeLock;
+
+//    public TimerService() {
+//        super("TimerService");
+//    }
+
+
     @Override
     public void onCreate() {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         super.onCreate();
+
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent notificationIntent = new Intent(this, TimerActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                    0, notificationIntent, 0);
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("Example Title")
+                    .setContentText("Example Text")
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_attach_money_black_24dp)
+                    .build();
+
+            startForeground(1, notification);
+        }
+
+
+        PowerManager mgr = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        wakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TimerApp:MyWakeLockTag");
+        wakeLock.acquire(7_200_000);//keep cpu on, max time is 120 mins
     }
 
     @Override
+//    protected void onHandleIntent(@Nullable Intent intent) {
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+
         int mTimeLeftInMins = intent.getExtras().getInt("timeInMins", 0);
         timerBroadcastType = intent.getExtras().getString("timerBroadcastType");
         completedBroadcastType = intent.getExtras().getString("completedBroadcastType");
         Log.d(TAG, "onStartCommand: " + timerBroadcastType);
 
-        long mTimeLeftInMillis = mTimeLeftInMins * 1_000;//1 min is 60k milliseconds
+        long mTimeLeftInMillis = mTimeLeftInMins * 60_000;//1_000;//1 min is 60k milliseconds
 //        long mTimeLeftInMillis = mTimeLeftInMins * 43_200_000;//each second is 12 hours
 
         if (countDownTimer == null) {
@@ -71,21 +105,9 @@ public class TimerService extends Service {
             }.start();
         }
 
-        Intent notificationIntent = new Intent(this, TimerActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Example Title")
-                .setContentText("Example Text")
-                .setSmallIcon(R.drawable.ic_attach_money_black_24dp)
-                .setContentIntent(pendingIntent)
-                .build();
-
-        startForeground(1, notification);
+        return START_REDELIVER_INTENT;
 
 
-        return START_NOT_STICKY;
     }
 
     @Nullable
@@ -100,6 +122,7 @@ public class TimerService extends Service {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+        wakeLock.release();
         super.onDestroy();
     }
 }

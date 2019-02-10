@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class TopicListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
+
         //-set up recyclerview obj
 //        RecyclerView recyclerView = findViewById(R.id.recyclerView_list);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -53,6 +57,12 @@ public class TopicListActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 

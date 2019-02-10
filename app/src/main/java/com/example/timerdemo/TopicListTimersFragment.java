@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -76,8 +80,15 @@ public class TopicListTimersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated: TopicListTimersFragment.java-registerReceiver DAILYBROADCAST");
+//        CoordinatorLayout linearLayout = getActivity().findViewById(R.id.topic_list_timers);
+//        AnimationDrawable animationDrawable = (AnimationDrawable) linearLayout.getBackground();
+//        animationDrawable.setEnterFadeDuration(2000);
+//        animationDrawable.setExitFadeDuration(4000);
+//        animationDrawable.start();
+
         getActivity().setTitle("List of Timers");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         IntentFilter filter = new IntentFilter(DAILYBROADCAST);
         getActivity().registerReceiver(refreshScreenReceiver,filter);
@@ -95,7 +106,7 @@ public class TopicListTimersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
-                        new TopicListAddEditDeleteFragment()).commit();
+                        new TopicListAddEditDeleteFragment()).addToBackStack(null).commit();
             }
         });
 
@@ -160,7 +171,7 @@ public class TopicListTimersFragment extends Fragment {
             Log.d(TAG, "onViewCreated: TOPICLIST DELETED at POSITION: "+indexPosition);
 //            Topic deleteThisTopic = topicAdapter.getTopicAtPosition(indexPosition);
 //            Topic deleteThisTopic = topicViewModel.getAllTopics().getValue().get(id -1);
-            Topic deleteThisTopic = topicViewModel.getAllTopics().getValue().get(indexPosition-1);//get() - get the topic using index value
+            Topic deleteThisTopic = topicViewModel.getAllTopics().getValue().get(indexPosition);//get() - get the topic using index value
             topicViewModel.delete(deleteThisTopic);
         }
         //-format and set up the date text

@@ -91,6 +91,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
             //percentage = itemView.findViewById(R.id.percentageDone_TextView_item);
             playImage = itemView.findViewById(R.id.play_imageView_item);
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

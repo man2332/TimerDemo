@@ -1,14 +1,18 @@
 package com.example.timerdemo;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -47,6 +51,8 @@ public class TopicListAddEditDeleteFragment extends Fragment {
     private int id;
     private int elementPosition;
 
+    InputMethodManager imm;
+
     public TopicListAddEditDeleteFragment() {
         // Required empty public constructor
     }
@@ -58,12 +64,14 @@ public class TopicListAddEditDeleteFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_topic_list_addeditdelete, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         topicNameEditTextAddEdit = getActivity().findViewById(R.id.topic_name_editText_add);
 
@@ -77,16 +85,20 @@ public class TopicListAddEditDeleteFragment extends Fragment {
 
         //attempt to getArguments() from bundle, if there are, it's a edit fragment, else its a add new topic
         bundle = getArguments();
-        id = bundle != null? bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID, -1) : -1;
+        id = bundle != null ? bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID, -1) : -1;
         if (bundle != null && id != -1) {//if there is an ID
             elementPosition = bundle.getInt(ADDEDIT_EXTRA_TOPIC_INDEX_POSITION);//
             topicNameEditTextAddEdit.setText(bundle.getString(ADDEDIT_EXTRA_TOPIC_NAME));
-            getActivity().setTitle("Edit topic: ID: "+elementPosition+" TOTAL: " + bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
+            getActivity().setTitle("Edit topic: ID: " + elementPosition + " TOTAL: " + bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
         } else {
             getActivity().setTitle("Add topic");
             deleteButtonTopicListAdd.setVisibility(View.INVISIBLE);
         }
-
+        topicNameEditTextAddEdit.requestFocus();
+        topicNameEditTextAddEdit.setSelection(topicNameEditTextAddEdit.getText().length());
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(topicNameEditTextAddEdit, InputMethodManager.SHOW_FORCED);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
 
@@ -121,7 +133,7 @@ public class TopicListAddEditDeleteFragment extends Fragment {
         //check if user is editing a topic or adding a new one
         if (bundle != null && bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID, -1) != -1) {
             Toast.makeText(getActivity().getApplication(), "EDITTEED I THINK ", Toast.LENGTH_LONG).show();
-            Topic topic = new Topic(name,bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
+            Topic topic = new Topic(name.trim(), bundle.getString(ADDEDIT_EXTRA_TOPIC_TOTAL_MIN));
             topic.setId(bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID));
             Log.d(TAG, "saveTopic: EDIT " + bundle.getInt(ADDEDIT_EXTRA_TOPIC_ID));
             topicViewModel.update(topic);
@@ -130,7 +142,7 @@ public class TopicListAddEditDeleteFragment extends Fragment {
 
         } else {
             Toast.makeText(getActivity().getApplication(), "ADDED I THINK", Toast.LENGTH_LONG).show();
-            Topic topic = new Topic(name,"0");
+            Topic topic = new Topic(name.trim(), "0");
             topicViewModel.insert(topic);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_topic_list_container,
                     new TopicListTimersFragment()).commit();
@@ -143,7 +155,7 @@ public class TopicListAddEditDeleteFragment extends Fragment {
     @OnClick(R.id.delete_button_topic_list_add)
     public void onViewClicked(View view) {
         Log.d(TAG, "onViewClicked: ");
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.delete_button_topic_list_add:
                 Log.d(TAG, "onViewClicked: DELETE");
                 Bundle deleteBundle = new Bundle();
@@ -155,7 +167,23 @@ public class TopicListAddEditDeleteFragment extends Fragment {
                         fragment).commit();
                 break;
             default:
-                Toast.makeText(getContext(),"Failed to delete", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_LONG).show();
         }
     }
+
+
+    //when user leaves this view, hide the keyboard
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause: TOPICADDEDITDELETEFRAG");
+        super.onPause();
+//        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, InputMethodManager.HIDE_IMPLICIT_ONLY);
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(topicNameEditTextAddEdit.getWindowToken(), 0);
+    }
+
+
 }

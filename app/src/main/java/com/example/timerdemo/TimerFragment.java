@@ -1,5 +1,6 @@
 package com.example.timerdemo;
 
+import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,8 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     //for testing
     String titleStr;
 
+//    PowerManager.WakeLock wakeLock;
+//    PowerManager mgr;
 
     public static final TimerFragment newInstance(String title, String timerBroadcastType,
                                                   String completedBroadcastType) {
@@ -76,6 +80,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         seekBar = v.findViewById(R.id.seekbar_fragment_timer);
         timerTextView = v.findViewById(R.id.timer_textView_fragment_timer);
         startStopToggleButtonTimer = v.findViewById(R.id.startStop_toggleButton_timer);
+
 
 
         startStopToggleButtonTimer.setOnClickListener(this);
@@ -175,15 +180,17 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                     Log.d(TAG, "onViewClicked: start: " + titleStr + " : "+timerBroadcastType);
                     seekBar.setVisibility(View.INVISIBLE);
 
-                    Intent intent = new Intent(v.getContext(), TimerService.class);
-                    intent.putExtra("timeInMins", parseInt(timerTextView.getText().toString()));
-                    intent.putExtra("timerBroadcastType", timerBroadcastType);
-                    intent.putExtra("completedBroadcastType", completedBroadcastType);
+                    Intent intentService = new Intent(v.getContext(), TimerService.class);
+                    intentService.putExtra("timeInMins", parseInt(timerTextView.getText().toString()));
+                    intentService.putExtra("timerBroadcastType", timerBroadcastType);
+                    intentService.putExtra("completedBroadcastType", completedBroadcastType);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        v.getContext().startForegroundService(intent);
+                        Toast.makeText(getActivity().getApplicationContext(), ">= O", Toast.LENGTH_SHORT).show();
+                        v.getContext().startForegroundService(intentService);
                     } else {
-                        v.getContext().startService(intent);
+                        Toast.makeText(getActivity().getApplicationContext(), "< O", Toast.LENGTH_SHORT).show();
+                        v.getContext().startService(intentService);
                     }
                 } else {
                     Log.d(TAG, "onViewClicked: stop : " + current);
@@ -209,8 +216,13 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: TimeFragment: " + titleStr);
-        stopTimer();
-        unResisterBroadcastReceivers(getContext());
+        //if screen is on, then stop the timer & unregister
+        if(((PowerManager) getActivity().getSystemService(Context.POWER_SERVICE)).isScreenOn()){
+            stopTimer();
+            unResisterBroadcastReceivers(getContext());
+        }
+
+
 
         SharedPreferences prefs = getActivity().getSharedPreferences(SHAREDPREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -269,9 +281,10 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                     Log.d(TAG, "onReceive: duration: " + titleStr + duration);
                     Log.d(TAG, "onReceive: ADDING TIME");
                     long timeInSeconds = duration / 1000;
+                    long timeInMin = duration / 60_000;
                     //TODO:it stores timeInSeconds but it should be timeInMins- fix later
-                    if (timeInSeconds >= 5) {//min store time is 5 mins
-                        ((TimerActivity) getActivity()).updateTime(timeInSeconds);//testing*****************************************************************************
+                    if (timeInMin >= 5) {//min store time is 5 mins
+                        ((TimerActivity) getActivity()).updateTime(timeInMin);//testing*****************************************************************************
                     }
                 }else{
                     Log.d(TAG, "onReceive: TIMERFRAGMENT NOT ADDING TIME");
@@ -295,13 +308,22 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     //stop service and set the button to "Start"
     public void stopTimer() {
         Log.d(TAG, "stopTimer: TIMERFRAGMENT: STOP DA TIMER");
-        startStopToggleButtonTimer.setChecked(true);
-        timerTextView.setText("" + current);
-        seekBar.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(getActivity().getApplicationContext(), TimerService.class);
-        getActivity().stopService(intent);
+//        if(null != startStopToggleButtonTimer && timerTextView != null && seekBar != null &&
+//        getActivity() != null) {
+
+            startStopToggleButtonTimer.setChecked(true);
+            timerTextView.setText("" + current);
+            seekBar.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(getActivity().getApplicationContext(), TimerService.class);
+            getActivity().stopService(intent);
+//        }
+//        Log.d(TAG, "stopTimer: TIMERFRAGMENT ERRRRORR NO FIND");
+
     }
 
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        wakeLock.release();
+    }
 }

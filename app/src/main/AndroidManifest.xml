@@ -3,6 +3,7 @@
     package="com.example.timerdemo">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -34,6 +35,16 @@
         <receiver android:name=".DailyReceiver" android:enabled="true"/>
         <!--<receiver android:name=".TopicListTimersFragment$RefreshScreenReceiver"-->
             <!--android:enabled="true"/>-->
+
+        <receiver
+            android:name="com.example.timerdemo.DailyWakeUpReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
