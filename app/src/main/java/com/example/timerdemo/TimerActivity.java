@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class TimerActivity extends AppCompatActivity {
     //private String currentTime;
     //private int current;
 
+
     TimerPagerAdapter timerPagerAdapter;
 
 
@@ -68,6 +71,24 @@ public class TimerActivity extends AppCompatActivity {
         timerPagerAdapter = new TimerPagerAdapter(getSupportFragmentManager(), fragmentList);
         ViewPager viewPager = findViewById(R.id.view_pager_main);
         viewPager.setAdapter(timerPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d(TAG, "onPageScrolled: "+position);
+//                TimerFragment timerFragment = getSupportFragmentManager().findFragmentByTag()
+                timerPagerAdapter.stopTimers(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         topicViewModel = ViewModelProviders.of(this).get(TopicViewModel.class);
 

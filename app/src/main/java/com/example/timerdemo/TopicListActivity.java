@@ -71,7 +71,8 @@ public class TopicListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(topicListTimersFrag != null){
+//        if(topicListTimersFrag != null){
+        if(topicListTimersFrag.isAdded()){
             getSupportFragmentManager().putFragment(outState, "topicListFrag", topicListTimersFrag);
         }
     }

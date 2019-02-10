@@ -33,6 +33,14 @@ public class Constants {
     public static final int EDIT_TOPIC_REQUEST = 2;
 
     public static final String SHAREDPREFS_DAILY_TIME = "com.example.timerdemo.DAILY_TIME";
+    public static final String SHAREDPREFS = "com.example.timerdemo.sharedprefs";
 
     public static final String STUDIEDTODAYTEXT = "Studied Today: ";
+
+    public static final String TIMERTYPE_POMO = "com.example.timerdemo.timertype.pomo";
+    public static final String TIMERTYPE_LONG = "com.example.timerdemo.timertype.long";
+    public static final String TIMERTYPE_SHORT = "com.example.timerdemo.timertype.short";
+
+    public static final String TAG ="ttag";
+
 }

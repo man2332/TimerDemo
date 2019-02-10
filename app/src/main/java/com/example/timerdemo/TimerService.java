@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import static com.example.timerdemo.TimerActivity.TAG;
 import static com.example.timerdemo.utils.Constants.CHANNEL_ID;
 import static com.example.timerdemo.utils.Constants.COMPLETEDBROADCAST;
+import static com.example.timerdemo.utils.Constants.POMOTIMERBROADCAST;
 import static com.example.timerdemo.utils.Constants.TIMERBROADCAST;
 
 public class TimerService extends Service {
@@ -36,15 +37,15 @@ public class TimerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int mTimeLeftInMins = intent.getExtras().getInt("timeInMins",0);
+        int mTimeLeftInMins = intent.getExtras().getInt("timeInMins", 0);
         timerBroadcastType = intent.getExtras().getString("timerBroadcastType");
         completedBroadcastType = intent.getExtras().getString("completedBroadcastType");
-        Log.d(TAG, "onStartCommand: "+timerBroadcastType);
+        Log.d(TAG, "onStartCommand: " + timerBroadcastType);
 
         long mTimeLeftInMillis = mTimeLeftInMins * 1_000;//1 min is 60k milliseconds
 //        long mTimeLeftInMillis = mTimeLeftInMins * 43_200_000;//each second is 12 hours
 
-        if(countDownTimer == null){
+        if (countDownTimer == null) {
             countDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -56,11 +57,14 @@ public class TimerService extends Service {
 
                 @Override
                 public void onFinish() {
-                    if(countDownTimer != null){
+                    if (countDownTimer != null) {
                         countDownTimer.cancel();
+//                        if (timerBroadcastType.equals(POMOTIMERBROADCAST)) {
+//                            Log.d(TAG, "onFinish: TIMERSERVICE : SENDING TIME");
                         //send broadcast here to main that fragment_timer completed successfully
                         localBroadcastManager.sendBroadcast(new Intent(completedBroadcastType)//.putExtra("duration", 2880));
-                                .putExtra("duration", mTimeLeftInMillis));//each second will be 12 hours hehe
+                                .putExtra("duration", mTimeLeftInMillis).putExtra("timerBroadcastType", timerBroadcastType));//each second will be 12 hours hehe
+
                     }
                     stopSelf();
                 }
@@ -69,7 +73,7 @@ public class TimerService extends Service {
 
         Intent notificationIntent = new Intent(this, TimerActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0,notificationIntent,0);
+                0, notificationIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Example Title")
@@ -78,8 +82,7 @@ public class TimerService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
 
-        startForeground(1,notification);
-
+        startForeground(1, notification);
 
 
         return START_NOT_STICKY;
@@ -93,8 +96,8 @@ public class TimerService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy: TIMERSERVICE "+timerBroadcastType);
-        if(countDownTimer != null){
+        Log.d(TAG, "onDestroy: TIMERSERVICE " + timerBroadcastType);
+        if (countDownTimer != null) {
             countDownTimer.cancel();
         }
         super.onDestroy();
