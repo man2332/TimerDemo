@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,11 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.PipedInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +73,8 @@ public class TopicListTimersFragment extends Fragment {
 
     TopicAdapter topicAdapter;
 
+    Target target;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,11 +89,30 @@ public class TopicListTimersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated: TopicListTimersFragment.java-registerReceiver DAILYBROADCAST");
-//        CoordinatorLayout linearLayout = getActivity().findViewById(R.id.topic_list_timers);
+        CoordinatorLayout coordinatorLayout = getActivity().findViewById(R.id.topic_list_timers);
 //        AnimationDrawable animationDrawable = (AnimationDrawable) linearLayout.getBackground();
 //        animationDrawable.setEnterFadeDuration(2000);
 //        animationDrawable.setExitFadeDuration(4000);
 //        animationDrawable.start();
+        target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                coordinatorLayout.setBackground(new BitmapDrawable(getActivity().getResources(), bitmap));
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                Log.d(TAG, "onBitmapFailed: "+e.getMessage());
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.d(TAG, "onPrepareLoad: ");
+            }
+        };
+        Picasso.get().load(R.drawable.gradient_title_main_1).into(target);
+
+
 
         getActivity().setTitle("List of Timers");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);

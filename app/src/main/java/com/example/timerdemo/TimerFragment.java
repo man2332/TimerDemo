@@ -170,6 +170,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        registerLocalBroadcastReceivers(getContext());
     }
 
     @Override
@@ -209,7 +210,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "onResume: TimeFragment: " + titleStr);
         super.onResume();
 //        stopTimer();
-        registerLocalBroadcastReceivers(getContext());
     }
 
     @Override
@@ -219,7 +219,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         //if screen is on, then stop the timer & unregister
         if(((PowerManager) getActivity().getSystemService(Context.POWER_SERVICE)).isScreenOn()){
             stopTimer();
-            unResisterBroadcastReceivers(getContext());
+
         }
 
 
@@ -245,7 +245,11 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
+    @Override
+    public void onDestroyView() {
+        unResisterBroadcastReceivers(getContext());
+        super.onDestroyView();
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -278,12 +282,14 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
                 if(timerBroadcastType.equals(POMOTIMERBROADCAST)) {//if a pomo timer finished, add up time
                     //TODO: add duration to the total_time_completed in the db but for now just show toast
-                    Log.d(TAG, "onReceive: duration: " + titleStr + duration);
-                    Log.d(TAG, "onReceive: ADDING TIME");
+                    Log.d(TAG, "onReceive: duration: " + titleStr +" "+ duration);
+
                     long timeInSeconds = duration / 1000;
                     long timeInMin = duration / 60_000;
+                    Log.d(TAG, "onReceive: timeInMin: "+timeInMin);
                     //TODO:it stores timeInSeconds but it should be timeInMins- fix later
                     if (timeInMin >= 5) {//min store time is 5 mins
+                        Log.d(TAG, "onReceive: ADDING TIME: "+timeInMin);
                         ((TimerActivity) getActivity()).updateTime(timeInMin);//testing*****************************************************************************
                     }
                 }else{

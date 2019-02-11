@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static com.example.timerdemo.utils.Constants.SHAREDPREFS_DAILY_TIME;
 import static com.example.timerdemo.utils.Constants.SHORTCOMPLETEDBROADCAST;
 import static com.example.timerdemo.utils.Constants.SHORTTIMERBROADCAST;
 import static java.lang.Integer.parseInt;
+import static java.lang.Integer.sum;
 
 public class TimerActivity extends AppCompatActivity {
     public static final String TAG = "ttag";
@@ -65,7 +68,6 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
-
 
 
         Intent intent = getIntent();
@@ -139,7 +141,8 @@ public class TimerActivity extends AppCompatActivity {
         String sumTime = String.valueOf(topicOriginalTime += timeInMins);
         topic.setTotalMin(sumTime);
         topicViewModel.update(topic);
-
+        Log.d(TAG, String.format("updateTime: TimerActivity.java: id: %d, orginalTime: %d, timeInMins %d, sumTime: %s",
+                id,topicOriginalTime, timeInMins, sumTime));
         //update the dailyTime
 //        Integer originalDailyTime = topicViewModel.getDailyTime().getValue();
 //        Integer time = Integer.valueOf((int) timeInMins);

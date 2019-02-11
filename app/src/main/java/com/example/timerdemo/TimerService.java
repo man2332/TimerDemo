@@ -76,7 +76,7 @@ public class TimerService extends Service {
         completedBroadcastType = intent.getExtras().getString("completedBroadcastType");
         Log.d(TAG, "onStartCommand: " + timerBroadcastType);
 
-        long mTimeLeftInMillis = mTimeLeftInMins * 60_000;//1_000;//1 min is 60k milliseconds
+        long mTimeLeftInMillis = mTimeLeftInMins * 60_000;//60_000;//1_000;//1 min is 60k milliseconds
 //        long mTimeLeftInMillis = mTimeLeftInMins * 43_200_000;//each second is 12 hours
 
         if (countDownTimer == null) {

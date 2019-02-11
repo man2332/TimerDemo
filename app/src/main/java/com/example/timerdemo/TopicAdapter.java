@@ -1,6 +1,7 @@
 package com.example.timerdemo;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.timerdemo.utils.ItemTouchHelperAdapter;
 import com.example.timerdemo.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +28,8 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
     private List<Topic> topics = new ArrayList<>();
     private OnTopicItemClickListener listener;
     private Context context;
+
+
 
     public TopicAdapter(Context context) {
         this.context = context;
@@ -51,6 +55,10 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicHolder>
         //holder.percentage.setText("1%");//TODO: get the daily time- then daily time / goal time
         holder.playImage.setImageResource(R.drawable.ic_play_arrow);
 
+
+
+
+//        Picasso.get().load(R.drawable.gradient_list).into(holder.playImage);
 
     }
 
