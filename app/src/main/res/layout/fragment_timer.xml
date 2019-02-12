@@ -11,7 +11,8 @@
         android:textSize="30sp"
         android:text="adc"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/colorPrimaryDark"
         />
 
     <TextView
@@ -19,23 +20,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="123"
-        android:textSize="100dp"
+        android:textSize="60sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/title_textView_fragment_timer"
-        android:layout_margin="20dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/colorPrimaryDark"
         />
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/seekbar_fragment_timer"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_width="183dp"
+        android:layout_height="77dp"
         android:layout_below="@+id/timer_textView_fragment_timer"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginTop="40dp" />
     <ToggleButton
         android:id="@+id/startStop_toggleButton_timer"
         android:layout_width="100dp"
@@ -44,6 +42,7 @@
         android:checked="true"
         android:layout_below="@+id/seekbar_fragment_timer"
         android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
+        android:layout_marginTop="40dp"
+
         />
 </RelativeLayout>

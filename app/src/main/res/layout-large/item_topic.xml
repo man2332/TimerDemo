@@ -10,7 +10,7 @@
     >
 
     <RelativeLayout
-        android:background="@drawable/gradient_list_item"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
@@ -40,7 +40,7 @@
             android:src="@drawable/ic_play_arrow"
             android:layout_alignParentRight="true"
             android:padding="10dp"
-            android:background="@drawable/gradient_playbutton"/>
+            android:background="@color/colorPrimaryDark"/>
 
     </RelativeLayout>
 

@@ -1,5 +1,6 @@
 package com.example.timerdemo;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -71,6 +72,12 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: TimerFragment.java");
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -137,8 +144,14 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
         seekBar.setMax(TIMEMAX - TIMEMIN);//set max to 23, which means it has 24 positions since we count 0
         current *= 5;//now current is no longer position in our seekBar but the value lolz, * by 5 to get the value of the bar
-        timerTextView.setText("" + current);
 
+        //if timer is running...
+        if(isServiceRunning(TimerService.class)){
+            seekBar.setVisibility(View.INVISIBLE);
+        }else{
+            seekBar.setVisibility(View.VISIBLE);
+        }
+        timerTextView.setText("" + current);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -171,6 +184,11 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         registerLocalBroadcastReceivers(getContext());
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -216,14 +234,16 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: TimeFragment: " + titleStr);
+        //-if user press back, cancel button, or leaves activity &
         //if screen is on, then stop the timer & unregister
-        if(((PowerManager) getActivity().getSystemService(Context.POWER_SERVICE)).isScreenOn()){
-            stopTimer();
-
+        if(!isRecreating()){
+            Log.d(TAG, "onPause: isNotRecreating...");
+            if(((PowerManager) getActivity().getSystemService(Context.POWER_SERVICE)).isScreenOn()){
+                stopTimer();
+            }
+        }else {//if screen is being rotated, don't stop the timer
+            Log.d(TAG, "onPause: RECREATING... do nothing");
         }
-
-
-
         SharedPreferences prefs = getActivity().getSharedPreferences(SHAREDPREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         switch (titleStr) {
@@ -245,12 +265,21 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: TimerFragment.java");
         unResisterBroadcastReceivers(getContext());
+
         super.onDestroyView();
     }
-
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: TimerFragment.java");
+        super.onDestroy();
+//        wakeLock.release();
+    }
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         Log.d(TAG, "onSaveInstanceState: TIMERFRAGMENT");
@@ -327,9 +356,23 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        wakeLock.release();
+    //is the screen being reconfigured?(rotated)
+    public boolean isRecreating() {
+        //consider pre honeycomb not recreating
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
+                getActivity().isChangingConfigurations();
     }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

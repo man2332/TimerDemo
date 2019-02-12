@@ -18,7 +18,7 @@ public class Utils {
     public static String convertMilisToTimeFormat(long millisUntilFinished) {
         String timeString = "";
         if (millisUntilFinished >= 3_600_000) {//if time is greater/equal than one hour
-            timeString = String.format(Locale.getDefault(), "%02d:%02d:%02d",
+            timeString = String.format(Locale.getDefault(), "%2d:%02d:%02d",
                     TimeUnit.MILLISECONDS.toHours(millisUntilFinished) % 60,
                     TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
